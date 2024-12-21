@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "dwrt",
+  "version": "${version}",
+  "name": "DWR Teams",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/dwrt/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "com.siesque.dwrt.DWRTeams"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
