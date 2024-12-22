@@ -3,9 +3,14 @@
   "id": "dwrt",
   "version": "${version}",
   "name": "DWR Teams",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "description": "DWR Teams",
+  "authors": [
+    "separatehhh23"
+  ],
+  "contact": {
+    "sources": "https://github.com/Separatehhh23/DWRT",
+    "issues": "https://github.com/Separatehhh23/DWRT/issues"
+  },
   "license": "MIT",
   "icon": "assets/dwrt/icon.png",
   "environment": "server",
