@@ -20,6 +20,7 @@ public class DWRTeams implements DedicatedServerModInitializer {
     public void onInitializeServer() {
         CommandRegistrationCallback.EVENT.register((dispatcher,registryAccess, environment) -> {
             dispatcher.register(CommandManager.literal("dwrt")
+                    .executes(teams::info)
                     .then(CommandManager.literal("create")
                             .then(CommandManager.argument("name", StringArgumentType.string())
                                     .executes(teams::createTeam)))
@@ -28,7 +29,13 @@ public class DWRTeams implements DedicatedServerModInitializer {
                                     .executes(teams::invite)))
                     .then(CommandManager.literal("join")
                             .then(CommandManager.argument("name", StringArgumentType.string())
-                                    .executes(teams::join))));
+                                    .executes(teams::join)))
+                    .then(CommandManager.literal("info")
+                            .executes(teams::info)
+                            .then(CommandManager.argument("name", StringArgumentType.string())
+                                    .executes(teams::otherTeamInfo)))
+                    .then(CommandManager.literal("list")
+                            .executes(teams::list)));
         });
     }
 }

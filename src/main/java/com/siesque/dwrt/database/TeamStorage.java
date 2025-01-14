@@ -48,4 +48,8 @@ public class TeamStorage {
 
         throw new RuntimeException("Team not found");
     }
+
+    public static List<Team> getTeams() {
+        return loadData();
+    }
 }

@@ -2,14 +2,16 @@ package com.siesque.dwrt.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.siesque.dwrt.Team;
-import com.siesque.dwrt.database.InviteStorage;
-import com.siesque.dwrt.database.TeamStorage;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
+
+import com.siesque.dwrt.database.InviteStorage;
+import com.siesque.dwrt.database.TeamStorage;
+import com.siesque.dwrt.Team;
 
 public class Teams {
     private final Logger LOGGER;
@@ -82,6 +84,64 @@ public class Teams {
         }
 
         source.sendFeedback(() -> Text.literal("You have joined team " + team), false);
+
+        return 1;
+    }
+
+    public int list(CommandContext<ServerCommandSource> context) {
+        ServerCommandSource source = context.getSource();
+
+        if (source.getEntity() == null) {
+            source.sendFeedback(() -> Text.literal("This command must be run by and entity!"), false);
+            return 0;
+        }
+
+        List<Team> teams = TeamStorage.getTeams();
+        source.sendFeedback(() -> Text.literal("Teams:"), false);
+        for (Team team : teams) {
+            source.sendFeedback(() -> Text.literal(team.name), false);
+        }
+
+        return 1;
+    }
+
+    public int info(CommandContext<ServerCommandSource> context) {
+        ServerCommandSource source = context.getSource();
+
+        if (source.getEntity() == null) {
+            source.sendFeedback(() -> Text.literal("This command must be run by and entity!"), false);
+            return 0;
+        }
+
+        String player = source.getEntity().getName().getString();
+
+        Team team = TeamStorage.getTeamFromMember(player);
+
+        source.sendFeedback(() -> Text.literal(String.format("§2Info for team §r%s:", team.name)), false);
+        source.sendFeedback(() -> Text.literal("Members:"), false);
+        for (String member : team.members) {
+            source.sendFeedback(() -> Text.literal(member), false);
+        }
+
+        return 1;
+    }
+
+    public int otherTeamInfo(CommandContext<ServerCommandSource> context) {
+        String name = StringArgumentType.getString(context, "name");
+        ServerCommandSource source = context.getSource();
+
+        if (source.getEntity() == null) {
+            source.sendFeedback(() -> Text.literal("This command must be run by and entity!"), false);
+            return 0;
+        }
+
+        Team team = TeamStorage.getTeam(name);
+
+        source.sendFeedback(() -> Text.literal(String.format("§2Info for team §r%s:", team.name)), false);
+        source.sendFeedback(() -> Text.literal("Members:"), false);
+        for (String member : team.members) {
+            source.sendFeedback(() -> Text.literal(member), false);
+        }
 
         return 1;
     }
