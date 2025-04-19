@@ -25,7 +25,7 @@ public class Teams {
         ServerCommandSource source = context.getSource();
 
         if (source.getEntity() == null) {
-            source.sendFeedback(() -> Text.literal("This command must be run by and entity!"), false);
+            source.sendFeedback(() -> Text.literal("This command must be run by an entity!"), false);
             return 0;
         }
 
