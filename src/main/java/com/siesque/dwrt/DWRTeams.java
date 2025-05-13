@@ -1,41 +1,38 @@
 package com.siesque.dwrt;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
-import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.siesque.dwrt.commands.Teams;
+import java.io.IOException;
 
-public class DWRTeams implements DedicatedServerModInitializer {
-    public static final String MOD_ID = "dwrt";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-    Teams teams = new Teams(LOGGER);
+public final class DWRTeams implements ModInitializer {
+    private static final String MOD_ID = "dwrt";
+    private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    private TeamsManager teamsManager;
 
     @Override
-    public void onInitializeServer() {
-        CommandRegistrationCallback.EVENT.register((dispatcher,registryAccess, environment) -> {
-            dispatcher.register(CommandManager.literal("dwrt")
-                    .executes(teams::info)
-                    .then(CommandManager.literal("create")
-                            .then(CommandManager.argument("name", StringArgumentType.string())
-                                    .executes(teams::createTeam)))
-                    .then(CommandManager.literal("invite")
-                            .then(CommandManager.argument("player", StringArgumentType.string())
-                                    .executes(teams::invite)))
-                    .then(CommandManager.literal("join")
-                            .then(CommandManager.argument("name", StringArgumentType.string())
-                                    .executes(teams::join)))
-                    .then(CommandManager.literal("info")
-                            .executes(teams::info)
-                            .then(CommandManager.argument("name", StringArgumentType.string())
-                                    .executes(teams::otherTeamInfo)))
-                    .then(CommandManager.literal("list")
-                            .executes(teams::list)));
+    public void onInitialize() {
+        try {
+            teamsManager = new TeamsManager(LOGGER);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        CommandRegistrationCallback.EVENT.register((
+                dispatcher,
+                registryAccess,
+                environment
+        ) -> {
+            dispatcher.register(
+                    CommandManager.literal("dwrt")
+                            .then(CommandManager.literal("create")
+                                    .executes(teamsManager::createTeam))
+                            .then(CommandManager.literal("list")
+                                    .executes(teamsManager::listTeams))
+            );
         });
     }
 }

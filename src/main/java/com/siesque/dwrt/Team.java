@@ -2,40 +2,19 @@ package com.siesque.dwrt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import com.siesque.dwrt.database.TeamStorage;
+public final class Team {
+    public String name;
+    public List<UUID> members;
+    public String color;
+    public boolean isPublic;
 
-public class Team {
-    public final String name;
-    public List<String> members = new ArrayList<>();
-
-    public Team(String name, String initialMember) {
+    public Team(String name, boolean isPublic, String color, UUID creator) {
+        this.members = new ArrayList<>();
+        this.members.add(creator);
         this.name = name;
-        this.members.add(initialMember);
-    }
-
-    public void addMember(String member) {
-        members.add(member);
-        write();
-    }
-
-    public void removeMember(String member) {
-        members.remove(member);
-        write();
-    }
-
-    private void write() {
-        List<Team> prevTeams = TeamStorage.loadData();
-        List<Team> teams = new ArrayList<>();
-
-        for (Team team : prevTeams) {
-            if (team.name.equals(name)) {
-                teams.add(this);
-            } else {
-                teams.add(team);
-            }
-        }
-
-        TeamStorage.saveData(teams);
+        this.color = color;
+        this.isPublic = isPublic;
     }
 }
