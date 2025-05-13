@@ -1,6 +1,7 @@
 package com.siesque.dwrt;
 
 import com.google.common.reflect.TypeToken;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.siesque.libdwr.database.JSONStorage;
@@ -114,6 +115,24 @@ public final class TeamsManager {
                 .reduce((x, y) -> x + y)
                 .orElse("No teams found")
         ), false);
+
+        return 1;
+    }
+
+    public int leaveTeam(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        UUID uuid = context.getSource().getPlayerOrThrow().getUuid();
+        String teamName = StringArgumentType.getString(context, "teamName");
+
+        int i = 0;
+        for (Team team : teams) {
+            if (team.name.equals(teamName) && team.members.contains(uuid)) {
+                team.members.remove(uuid);
+                if (team.members.isEmpty()) {
+                    teams.remove(i);
+                }
+            }
+            ++i;
+        }
 
         return 1;
     }

@@ -1,5 +1,6 @@
 package com.siesque.dwrt;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
@@ -32,6 +33,9 @@ public final class DWRTeams implements ModInitializer {
                                     .executes(teamsManager::createTeam))
                             .then(CommandManager.literal("list")
                                     .executes(teamsManager::listTeams))
+                            .then(CommandManager.literal("leave")
+                                    .then(CommandManager.argument("teamName", StringArgumentType.string())
+                                            .executes(teamsManager::leaveTeam)))
             );
         });
     }
